@@ -1,4 +1,5 @@
-# ipk-cstester
+Client <=> Server Aplication Tester 2015
+========================================
 
 ./cstester port-number
 
