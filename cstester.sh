@@ -27,20 +27,23 @@ TESTS=(
 	"./client -h 127.0.0.1 -p $1 -u 1994 285" #Test22
 	"./client -h 127.0.0.1 -p $1 -u unkown unkown2" #Test23
 	"./client -h localhost -p $1 -u 1994 285 -G" #Test24
-	"./client -h 127.0.0.1 -p $1 -l rabj rysavy unkown -LUGHNS" #Test 25 -tieto testy 25 a 26 testuju ci chyby ze nenaslo uzivatela idu na stderr a najdeny uivatelia na stdin
-	"./client -h 127.0.0.1 -p $1 -l rabj rysavy unkown -LUGHNS" #Test26
-	"./client -p $1 -l rabj rysavy unkown -LUGHNS" #Test27 --chyba host
-	"./client -h 127.0.0.1 -l rabj rysavy unkown -LUGHNS" #Test28 --chyba host
-	"./client -h 127.0.0.1 -p $1 rabj rysavy unkown -LUGHNS" #Test29 --chyba -l alebo -u
-	"./client -h 127.0.0.1 -p $1" #Test30 --chyba -l alebo -u
-	"./client -h 127.50.50.1 -p $1 -l rabj rysavy unkown -LUGHNS" #Test31 chyba neplatny host
-	"./client -h 127.0.0.1 -p 40 -l rabj rysavy unkown -LUGHNS" #Test32 port mimo povoleny rozsah
-	"./client -h 127.0.0.1 -p $1 -l rabj rysavy unkown -LUGHNSX" #Test33 argument naviac
-	"./server -p 40" #Test34 port mimo povoleny rozsah
-	"./server -p $1 -X" #Test35 argument navyse
-	"./server -p $1 sdsd" #Test36 argument navyse
-	"./server -p" #Test37 nezadany port
-	"./server" #Test38 nezadany port
+	"./client -h localhost -p $1 -l rabj rysavy unkown -u 1994 -L -U -G" #Test25 ++
+	"./client -h localhost -p $1 -u 1994 285 -l unkown -G -U -S" #Test26 ++
+	"./client -h 127.0.0.1 -p $1 -l rabj rysavy unkown -LUGHNS" #Test 27 -tieto testy 27 a 28 testuju ci chyby ze nenaslo uzivatela idu na stderr a najdeny uivatelia na stdin
+	"./client -h 127.0.0.1 -p $1 -l rabj rysavy unkown -LUGHNS"
+	"./client -p $1 -l rabj rysavy unkown -LUGHNS" #Test29 --chyba host
+	"./client -h 127.0.0.1 -l rabj rysavy unkown -LUGHNS" #Test30 --chyba host
+	"./client -h 127.0.0.1 -p $1 rabj rysavy unkown -LUGHNS" #Test31 --chyba -l alebo -u
+	"./client -h 127.0.0.1 -p $1" #Test32 --chyba -l alebo -u
+	"./client -h 127.50.50.1 -p $1 -l rabj rysavy unkown -LUGHNS" #Test33 chyba neplatny host
+	"./client -h 127.0.0.1 -p 40 -l rabj rysavy unkown -LUGHNS" #Test34 port mimo povoleny rozsah
+	"./client -h 127.0.0.1 -p $1 -l rabj rysavy unkown -LUGHNSX" #Test35 argument naviac
+	"./client -h 127.0.0.1 -p $1 -l rabj rysavy unkown -LUGL" #Test36 duplicitny argument ++
+	"./server -p 40" #Test37 port mimo povoleny rozsah
+	"./server -p $1 -X" #Test38 argument navyse
+	"./server -p $1 sdsd" #Test39 argument navyse
+	"./server -p" #Test40 nezadany port
+	"./server" #Test41 nezadany port
 )
 
 if [ -z ${1+x} ]
@@ -55,7 +58,7 @@ make
 ###################Test klienta######################
 ./server -p $1 &
 
-for (( number=1; number<=24; number++ ))
+for (( number=1; number<=26; number++ ))
 do
 	eval ${TESTS[$number - 1]} &>out/test${number}.out
 	diff -u ref-out/test${number}.out out/test${number}.out > out/test${number}.diff
@@ -68,24 +71,24 @@ do
 	echo -e "\033[0m-----------"
 done
 
-eval ${TESTS[24]} 1>out/test25.out 2>out/test25.err
-diff -u ref-out/test25.out out/test25.out > out/test25.diff
+eval ${TESTS[26]} 1>out/test27.out 2>out/test27.err
+diff -u ref-out/test27.out out/test27.out > out/test27.diff
 if [ $? = 0 ]
 	then
-		echo -e "\033[1;32mTest25 PASS"
+		echo -e "\033[1;32mTest27 PASS"
 	else
-		echo -e "\033[31mTest25 FAIL"
+		echo -e "\033[31mTest27 FAIL"
 fi
-diff -u ref-out/test25.err out/test25.err > out/test25.diff
+diff -u ref-out/test27.err out/test27.err > out/test27.diff
 if [ $? = 0 ]
 	then
-		echo -e "\033[1;32mTest26 PASS"
+		echo -e "\033[1;32mTest28 PASS"
 	else
-		echo -e "\033[31mTest26 FAIL"
+		echo -e "\033[31mTest28 FAIL"
 fi
 echo -e "\033[0m-----------"
 
-for (( number=27; number<=33; number++ ))
+for (( number=29; number<=36; number++ ))
 do
 	eval ${TESTS[$number - 1]}
 	if [ $? -ne 0 ]
@@ -100,7 +103,7 @@ done
 kill $!
 
 ###################Test serveru######################
-for (( number=34; number<=38; number++ ))
+for (( number=37; number<=41; number++ ))
 do
 	eval ${TESTS[$number - 1]}
 	if [ $? -ne 0 ]
